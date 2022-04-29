@@ -1,12 +1,10 @@
 import express from 'express';
 import { Client, Collection, Intents } from 'discord.js';
 import playerRoutes from './routes/players.js';
-
 import fs from 'fs';
 import dotenv from 'dotenv';
 
 dotenv.config();
-
 const app = express();
 app.use('/player', playerRoutes);
 
@@ -14,10 +12,9 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);
 });
+
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
-
 client.commands = new Collection();
-
 const commandFiles = fs.readdirSync('./commands').filter((file) => file.endsWith('.js'));
 
 for (const file of commandFiles) {
@@ -43,18 +40,5 @@ client.on('interactionCreate', async (interaction) => {
     interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
   }
 });
-
-// const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
-
-// const eventFiles = fs.readdirSync('./events').filter((file) => file.endsWith('.js'));
-
-// for (const file of eventFiles) {
-//   const event = await import(`./events/${file}`);
-//   if (event.once) {
-//     client.once(event.default.name, (...args) => event.default.execute(...args));
-//   } else {
-//     client.on(event.default.name, (...args) => event.default.execute(...args));
-//   }
-// }
 
 client.login(process.env.TOKEN);

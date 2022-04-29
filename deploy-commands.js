@@ -3,6 +3,8 @@ import { Routes } from 'discord-api-types/v9';
 import dotenv from 'dotenv';
 import fs from 'fs';
 
+// Run this file once to deploy the commands
+
 dotenv.config();
 
 const commandFiles = fs.readdirSync('./commands').filter((file) => file.endsWith('.js'));
