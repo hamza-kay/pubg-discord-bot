@@ -1,11 +1,19 @@
-// // Require the necessary discord.js classes
+import express from 'express';
 import { Client, Collection, Intents } from 'discord.js';
+import playerRoutes from './routes/players.js';
 
 import fs from 'fs';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
+const app = express();
+app.use('/player', playerRoutes);
+
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`App listening on port ${PORT}`);
+});
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
 
 client.commands = new Collection();
@@ -29,10 +37,10 @@ client.on('interactionCreate', async (interaction) => {
   if (!command) return;
 
   try {
-    await command.default.execute(interaction);
+    command.default.execute(interaction);
   } catch (error) {
     console.error(error);
-    await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+    interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
   }
 });
 
